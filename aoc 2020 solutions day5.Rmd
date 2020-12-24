@@ -1,0 +1,72 @@
+---
+title: "Advent of Code 2020 - Day 5"
+author: "parmsam"
+date: "12/22/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(stringr)
+
+setwd("/Users/samparmar/Documents/programming/advent of code")
+```
+
+## Part A
+### QUESTION: What is the highest seat ID on a boarding pass?
+```{r day4pa}
+a <- readr::read_file("day5input.txt")
+b <- str_split(a,"\\n")
+c <- data.frame(b) %>% rename("from" = 1)
+
+d <- c %>% mutate(rows = str_extract(from, '[FB]{7}'), 
+             columns = str_extract(from, '[LR]{3}')) %>% drop_na()
+
+
+calc_pos <- function(string, max=127) {
+  column_list = 0:max
+  string_list = str_split(string,"")[[1]]
+  for(i in string_list){
+    if (i =="L" | i=="F"){
+      column_list = head(column_list,1) : floor(median(column_list))
+    }
+    if (i=="R" | i =="B") {
+      column_list = ceiling(median(column_list)) : tail(column_list,1)
+    }
+  }
+  return(column_list[[1]])
+}
+#function testing 
+# calc_pos("RRR",7)
+# calc_pos("RLL",7)
+# calc_pos("RLR",7)
+# 
+# calc_pos("BFFFBBF", 127)
+# calc_pos("FFFBBBF", 127)
+# calc_pos("BBFFBBF", 127)
+
+e <- d %>% mutate(row_numb = map(rows, max=127, calc_pos), 
+             column_numb = map(columns, max=7, calc_pos) ) %>% 
+  unnest(cols = c(row_numb, column_numb)) %>% 
+  mutate(seat_id = row_numb*8 + column_numb)
+
+e %>% arrange(-row_numb,-column_numb) %>% head(1) %>% select(seat_id)
+```
+### ANSWER: Seat ID number is 926
+
+## Part B
+### QUESTION: What is the ID of your seat?
+```{r day4pb}
+e <- e %>% arrange(seat_id)
+f <- rbind(e, 0)
+expected = min(e$seat_id):max(e$seat_id)
+
+g <- cbind(f, expected)
+g %>% filter(seat_id != expected) %>% head(1) %>% select(expected)
+```
+### ANSWER: Your Seat ID number is 657
+
+
+
