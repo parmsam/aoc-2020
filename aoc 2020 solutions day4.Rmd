@@ -11,7 +11,7 @@ library(tidyverse)
 library(lubridate)
 library(stringr)
 
-setwd("/Users/samparmar/Documents/programming/advent of code")
+setwd("/Users/samparmar/Documents/programming/advent of code/aoc-2020")
 ```
 
 ## Part A

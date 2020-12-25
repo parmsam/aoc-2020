@@ -1,6 +1,6 @@
 ---
 title: "[Advent of Code 2020 - Day 6](https://adventofcode.com/2020/day/6)"
-author: "parmsam
+author: "parmsam"
 date: "12/24/2020"
 output: html_document
 ---
@@ -11,10 +11,9 @@ library(tidyverse)
 library(lubridate)
 library(stringr)
 
-setwd("/Users/samparmar/Documents/programming/advent of code")
+setwd("/Users/samparmar/Documents/programming/advent of code/aoc-2020")
 ```
-# https://adventofcode.com/2020/day/6
-## Part A:
+## Part A
 ### QUESTION: For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
 ```{r}
 a <- readr::read_file("day6input.txt")
@@ -29,22 +28,30 @@ c <- c %>%
 c %>% summarize(count_uniq_grp_q = sum(unique_group_ques))
 
 ```
-### ANSWER: 
+### ANSWER: 6782
 
 ## Part B
-### QUESTION:
+### QUESTION: For each group, count the number of questions to which everyone answered "yes". What is the sum of those counts?
 ```{r}
-e <- d %>% mutate(value = strsplit(from, regex(" |\\n"))) %>%
+d <- c %>% mutate(value = strsplit(from, regex(" |\\n"))) %>%
   mutate(group_size = map(value, length) ) %>% 
   select(-value) %>% 
   unnest(cols = c(group_size)) %>%
-  mutate(everyone_yes = map(from, pattern=letters, str_count)) %>%
-  mutate(everyone_yes1 = map(everyone_yes, group_size,function(everyone_yes, group_size) {return(everyone_yes/group_size)}))
-  
-e
+  mutate(everyone_yes = map(from, pattern=letters, str_count))
 
+yes_letters <- function(vector, size) {
+  letters[vector %in% size]
+}
+
+# yes_letters(c(0, 1, 5, 0, 1, 0, 0, 0, 0, 0, 1, 5, 0, 5, 0, 5, 0, 0, 0, 0, 5, 0, 0, 1, 0, 5), 5)
+# yes_letters(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0), 2)
+# yes_letters(c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2), 4)
+
+e <- d %>% mutate(everyone_yes_subset = map2(everyone_yes, group_size, yes_letters)) %>% 
+  mutate(everyone_yes_ct = as.numeric(map(everyone_yes_subset, length)))
+e %>% summarize(sum(everyone_yes_ct))
 ```
-### ANSWER:
+### ANSWER: 3596
 
 
 
