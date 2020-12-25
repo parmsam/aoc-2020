@@ -1,6 +1,6 @@
 # aoc-2020
 
-## My solutions to Advent of Code 2020 challenges:
+## My solutions:
 - [x] day 1
 - [x] day 2 
 - [ ] day 3
