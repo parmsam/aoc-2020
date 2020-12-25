@@ -1,7 +1,7 @@
 ---
-title: "Advent of Code 2020 - Day 5"
+title: "[Advent of Code 2020 - Day 5](https://adventofcode.com/2020/day/5)"
 author: "parmsam"
-date: "12/22/2020"
+date: "12/24/2020"
 output: html_document
 ---
 
@@ -13,10 +13,9 @@ library(stringr)
 
 setwd("/Users/samparmar/Documents/programming/advent of code")
 ```
-
 ## Part A
 ### QUESTION: What is the highest seat ID on a boarding pass?
-```{r day4pa}
+```{r}
 a <- readr::read_file("day5input.txt")
 b <- str_split(a,"\\n")
 c <- data.frame(b) %>% rename("from" = 1)
@@ -58,7 +57,7 @@ e %>% arrange(-row_numb,-column_numb) %>% head(1) %>% select(seat_id)
 
 ## Part B
 ### QUESTION: What is the ID of your seat?
-```{r day4pb}
+```{r}
 e <- e %>% arrange(seat_id)
 f <- rbind(e, 0)
 expected = min(e$seat_id):max(e$seat_id)

@@ -373,7 +373,7 @@ summary {
 
 
 
-<h1 class="title toc-ignore">Advent of Code 2020 - Day 4</h1>
+<h1 class="title toc-ignore"><a href="https://adventofcode.com/2020/day/4">Advent of Code 2020 - Day 4</a></h1>
 <h4 class="author">parmsam</h4>
 <h4 class="date">12/22/2020</h4>
 
@@ -382,6 +382,8 @@ summary {
 
 <div id="part-a" class="section level2">
 <h2>Part A</h2>
+<div id="question-count-the-number-of-valid-passports---those-that-have-all-required-fields.-treat-cid-as-optional.-in-your-batch-file-how-many-passports-are-valid" class="section level3">
+<h3>Question: Count the number of valid passports - those that have all required fields. Treat cid as optional. In your batch file, how many passports are valid?</h3>
 <pre class="r"><code>a &lt;- readr::read_file(&quot;day4input.txt&quot;)
 b &lt;- str_split(a,&quot;\\n\\n&quot;)
 c &lt;- data.frame(b) %&gt;% rename(&quot;from&quot; = 1)
@@ -404,12 +406,15 @@ f %&gt;% ungroup() %&gt;% select(passport_numb) %&gt;% count()</code></pre>
 ##       n
 ##   &lt;int&gt;
 ## 1   254</code></pre>
-<div id="valid-passports-in-the-batch-file-for-part-a" class="section level3">
-<h3>254 valid passports in the batch file for part A</h3>
+</div>
+<div id="answer-254-valid-passports-in-the-batch-file-for-part-a" class="section level3">
+<h3>Answer: 254 valid passports in the batch file for part A</h3>
 </div>
 </div>
 <div id="part-b" class="section level2">
 <h2>Part B</h2>
+<div id="question-count-the-number-of-valid-passports---those-that-have-all-required-fields-and-valid-values.-continue-to-treat-cid-as-optional.-in-your-batch-file-how-many-passports-are-valid" class="section level3">
+<h3>Question: Count the number of valid passports - those that have all required fields and valid values. Continue to treat cid as optional. In your batch file, how many passports are valid?</h3>
 <pre class="r"><code>f2 &lt;- e %&gt;% 
   separate(value, c(&quot;field&quot;,&quot;values&quot;), sep=&quot;:&quot;) %&gt;% 
   ungroup() %&gt;% 
@@ -455,8 +460,9 @@ f3 %&gt;% count()</code></pre>
 ##       n
 ##   &lt;int&gt;
 ## 1   184</code></pre>
-<div id="valid-passports-in-the-batch-file-for-part-b" class="section level3">
-<h3>184 valid passports in the batch file for part B</h3>
+</div>
+<div id="answer-184-valid-passports-in-the-batch-file-for-part-b" class="section level3">
+<h3>Answer: 184 valid passports in the batch file for part B</h3>
 </div>
 </div>
 

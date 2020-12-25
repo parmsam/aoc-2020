@@ -1,0 +1,50 @@
+---
+title: "[Advent of Code 2020 - Day 6](https://adventofcode.com/2020/day/6)"
+author: "parmsam
+date: "12/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(stringr)
+
+setwd("/Users/samparmar/Documents/programming/advent of code")
+```
+# https://adventofcode.com/2020/day/6
+## Part A:
+### QUESTION: For each group, count the number of questions to which anyone answered "yes". What is the sum of those counts?
+```{r}
+a <- readr::read_file("day6input.txt")
+b <- str_split(a,"\\n\\n")
+c <- data.frame(b) %>% rename("from" = 1) 
+
+c <- c %>% 
+  mutate(unique_group_ques = map(from, pattern=letters, str_count)) %>% 
+  mutate(unique_group_ques = map(unique_group_ques, as.logical)) %>%
+  mutate(unique_group_ques = as.numeric(map(unique_group_ques, sum)))
+
+c %>% summarize(count_uniq_grp_q = sum(unique_group_ques))
+
+```
+### ANSWER: 
+
+## Part B
+### QUESTION:
+```{r}
+e <- d %>% mutate(value = strsplit(from, regex(" |\\n"))) %>%
+  mutate(group_size = map(value, length) ) %>% 
+  select(-value) %>% 
+  unnest(cols = c(group_size)) %>%
+  mutate(everyone_yes = map(from, pattern=letters, str_count)) %>%
+  mutate(everyone_yes1 = map(everyone_yes, group_size,function(everyone_yes, group_size) {return(everyone_yes/group_size)}))
+  
+e
+
+```
+### ANSWER:
+
+
+
