@@ -1,6 +1,7 @@
 # aoc-2020
 
-## My solutions:
+## My solutions
+
 - [x] day 1
 - [x] day 2 
 - [ ] day 3
