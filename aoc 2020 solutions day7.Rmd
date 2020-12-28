@@ -1,0 +1,131 @@
+---
+title: "[Advent of Code 2020 - Day 7](https://adventofcode.com/2020/day/7)"
+author: "parmsam"
+date: "12/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(stringr)
+library(igraph)
+library(tidygraph)
+library(ggraph)
+library(visNetwork)
+library(networkD3)
+
+setwd("/Users/samparmar/Documents/programming/advent of code/aoc-2020")
+```
+## Part A
+### QUESTION: 
+```{r}
+a <- readr::read_file("day7input.txt")
+a_test <- c("light red bags contain 1 bright white bag, 2 muted yellow bags.
+dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+bright white bags contain 1 shiny gold bag.
+muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+faded blue bags contain no other bags.
+dotted black bags contain no other bags.")
+# b <- str_split(a_test,"\\n")
+b <- str_split(a,"\\n")
+c <- data.frame(b) %>% rename("from" = 1) 
+
+d <- c %>% separate(from, c("bag","contains"), "contain") %>% 
+  mutate(contains = str_split(contains, ", ")) %>% 
+  unnest(cols = c(contains)) %>%
+  mutate(contains = str_remove(contains, "\\.")) %>% 
+  mutate(number_things = as.numeric(str_extract(contains, "[0-9]+"))) %>%
+  mutate(contains = str_remove(contains, "[0-9]+")) %>%
+  mutate(contains = str_trim(contains)) %>%
+  mutate(bag = str_trim(bag)) %>%
+  mutate(contains = str_replace(contains, "bags","bag")) %>%
+  mutate(bag = str_replace(bag, "bags","bag"))
+
+e <- d %>% filter(!is.na(bag) & !is.na(contains)) %>% select(-number_things)
+  
+return_contains <- function(x){
+  if(x %in% e$bag){
+    a <- e %>% filter(bag == x)
+    return(a$contains)
+  }
+}
+
+continue_cond <- function(x){
+  a = TRUE
+  b = return_contains(x)
+  c_vector = b
+  while(a){
+    for(i in b){
+      b = return_contains(i)
+      c_vector = append(c_vector, b)
+    }
+    if (length(b)==0){
+      return(c_vector)
+      a = FALSE
+    }
+  }
+} 
+
+f <- e %>% mutate(sub_containers = map(contains, continue_cond))
+g <- f %>% unnest(cols = c(sub_containers)) 
+h <- g %>% filter(sub_containers=="shiny gold bag"| contains=="shiny gold bag")
+
+h %>% select(bag) %>% count(bag) %>% dim()
+i <- h %>% select(bag) %>% count(bag)
+
+```
+### ANSWER:
+
+## Part B
+### QUESTION: 
+```{r}
+
+```
+### ANSWER:
+
+#TESTING/LEARNING:
+```{r}
+edges <- d %>% select(-number_things) %>% rename(from=bag, to=contains)
+
+nodes = bind_rows(d %>% select(bag), d %>% select(contains) %>% rename(bag=contains)) %>% unique()
+nodes <- nodes %>% rename(label = bag)
+
+bag_graph <- graph.data.frame(edges,directed=TRUE,vertices=nodes)
+
+plot(bag_graph,layout = layout_with_graphopt, edge.arrow.size = 0.1)
+
+# plot(routes_tidy, edge.arrow.size = 0.2, vertex.label=NA, main=NULL)
+
+ploedge_list <- tibble(from = c(1, 2, 2, 3, 4), to = c(2, 3, 4, 2, 1))
+node_list <- tibble(id = 1:4)
+
+routes_tidy <- tbl_graph(nodes = nodes, edges = edges, directed = TRUE)
+
+# routes_tidy <- tbl_graph(nodes = node_list, edges = edge_list, directed = TRUE)
+
+ggraph(routes_tidy) + geom_edge_link() + geom_node_point() + theme_graph()
+
+ggraph(routes_tidy) + geom_edge_link() + geom_node_point() + theme_graph()
+
+ggraph(routes_tidy, layout = "graphopt") + 
+  geom_node_point() +
+  geom_edge_link(alpha = 0.8) + 
+  scale_edge_width(range = c(0.2, 2)) +
+  geom_node_text(aes(label = label), repel = TRUE, ) +
+  labs(edge_width = "Letters") +
+  theme_graph()
+
+visNetwork(nodes=nodes %>% rowid_to_column("id"), edges=edges) %>% visOptions(highlightNearest = TRUE) %>% visEdges(arrows = "middle") %>% visOptions(selectedBy = "label", 
+             highlightNearest = TRUE, 
+             nodesIdSelection = TRUE) %>%
+  visPhysics(stabilization = FALSE)
+```
+
+
+
+
