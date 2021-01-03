@@ -1,0 +1,101 @@
+---
+title: "[Advent of Code 2020 - Day 1](https://adventofcode.com/2020/day/1)"
+author: "parmsam"
+date: "12/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(stringr)
+setwd("/Users/samparmar/Documents/programming/advent of code/aoc-2020")
+```
+
+## Part A
+### Question: Find the two entries that sum to 2020; what do you get if you multiply them together?
+```{r}
+day1a_input <- read.csv("aoc2020_inputs/day1a_input.txt",sep="\n")
+sum_interest = 2020
+a_df <- day1a_input %>% arrange(input) %>% rename(a = input)
+b_df <- day1a_input %>% arrange(input) %>% rename(b = input)
+c_df <- day1a_input %>% arrange(input) %>% rename(c = input)
+
+#random select of row and add to same row
+two_sum <- function(a_df=a_df, b_df=b_df){
+  while(TRUE){
+    sample_a <- sample_n(a_df,1) %>% as_vector()
+    sample_b <- sample_n(a_df,1) %>% as_vector()
+    if((sample_a + sample_b) == 2020) {
+      return( c(sample_a, sample_b) )
+    }
+  }
+}
+# two_sum(a_df, a_df)
+
+
+#better way of doing it by just getting combinations and filtering
+a_df %>% 
+  cbind(b_df) %>% 
+  expand(a,b) %>% 
+  mutate(c=a+b) %>% 
+  filter(c==2020)
+a = 1805; b = 215;
+b * a
+```
+### Answer: 388075
+
+## Part B
+### Question: What is the product of the three entries that sum to 2020?
+```{r}
+three_sum <- function(a_df, b_df, c_df){
+  while(TRUE){
+    sample_a <- sample_n(a_df,1) %>% as_vector()
+    sample_b <- sample_n(b_df,1) %>% as_vector()
+    sample_c <- sample_n(c_df,1) %>% as_vector()
+    if((sample_a + sample_b + sample_c) == 2020) {
+      return( c(sample_a, sample_b, sample_c) )
+    }
+  }
+}
+# three_sum(a_df, b_df, a_df)
+# above second part approach failed b/c took too long
+#trying combination approach
+#works
+a_df %>% 
+  cbind(b_df,c_df) %>% 
+  expand(a,b,c) %>% 
+  mutate(d=a+b+c) %>% 
+  filter(d==2020) %>% 
+  mutate(e=a*b*c) 
+```
+### Answer: 293450526
+
+```{r}
+#Python solution here
+# library(reticulate)
+# import pandas as pd
+# import numpy as np 
+
+#problem 1
+#load data
+
+# a = pd.read_csv('aoc2020_inputs/day1a_input.txt', sep="\n")['input']
+
+#approach with nested for loops
+#part a
+
+# for i in a:
+#     for j in a:
+#         if (i+j)==2020:
+#             print(i*j)
+#part b
+
+# for i in a:
+#     for j in a:
+#         for k in a:
+#             if (i+j+k)==2020:
+#                 print(i*j*k)
+```
+

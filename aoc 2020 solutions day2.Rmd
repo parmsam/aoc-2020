@@ -1,0 +1,31 @@
+---
+title: "[Advent of Code 2020 - Day 2](https://adventofcode.com/2020/day/2)"
+author: "parmsam"
+date: "12/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(stringr)
+setwd("/Users/samparmar/Documents/programming/advent of code/aoc-2020")
+```
+
+## Part A
+### Question: How many passwords are valid according to their policies?
+```{r}
+day2a_input <- read.csv("aoc2020_inputs/day2a_input.txt",sep="\n") 
+day2a_input <- day2a_input %>% separate(range.letter.input,sep=" ", c("a","b","c"))
+day2a_input <- day2a_input %>% separate(a, sep="-",c("a1","a2")) %>% mutate(b=str_remove(b,":")) %>% mutate(a1=as.numeric(a1),a2=as.numeric(a2))
+day2a_input %>% mutate(d = str_count(c,pattern=b)) %>% mutate(part2a =ifelse(d<=a2 & d >= a1, TRUE, FALSE)) %>% filter(part2a) %>% count()
+```
+### Answer: 620 passwords are valid
+
+## Part B
+### Question: How many passwords are valid according to the new interpretation of the policies?
+```{r}
+day2a_input %>% mutate(f = substr(c, a1,a1), g=substr(c, a2,a2)) %>% mutate(part2b = ifelse(b==f|b==g,TRUE, FALSE)) %>% mutate(part2b = ifelse(b==f & b==g, FALSE, part2b)) %>% count(part2b)
+```
+### Answer: 727 valid passports according to new interpretation

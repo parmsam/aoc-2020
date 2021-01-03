@@ -1,0 +1,33 @@
+---
+title: "[Advent of Code 2020 - Day 3](https://adventofcode.com/2020/day/3)"
+author: "parmsam"
+date: "12/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(stringr)
+setwd("/Users/samparmar/Documents/programming/advent of code/aoc-2020")
+```
+
+## Part A
+### Question: Starting at the top-left corner of your map and following a slope of right 3 and down 1, how many trees would you encounter?
+```{r}
+# day3a_input <- read.csv("aoc2020_inputs/day3a_test.txt",sep="\n")
+day3a_input <- read.csv("aoc2020_inputs/day3a_input.txt",sep="\n") 
+day3a_input %>% head()
+day3a_input %>% mutate(length = nchar(lines)) %>% count(length)
+#input length is always 31
+day3a_input %>% mutate(col = ((row_number()-1)*3)+1) %>% mutate(col = ifelse(col>31, col%%31, col)) %>% mutate(col = ifelse(col==0,31,col)) %>% mutate(pos = substr(lines,col,col)) %>% count(pos)
+```
+### Answer: 272 trees
+
+## Part B
+### Question: 
+```{r}
+
+```
+### Answer: 
